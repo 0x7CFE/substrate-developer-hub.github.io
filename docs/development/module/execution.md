@@ -2,11 +2,11 @@
 title: Runtime Execution
 ---
 
-The execution of the Substrate runtime is orchestrated by the Executive module in the Substrate Runtime Module Library (SRML).
+The execution of the Substrate runtime is orchestrated by the Executive pallet in the Framework for Runtime Aggregation of Modularised Entities (FRAME).
 
-Unlike the other modules in the SRML, this is not a _runtime_ module, but just a normal Rust module which calls into the various runtime modules included in your blockchain.
+Unlike the other pallets in the FRAME, this is not a pallet per se, but just a normal Rust module which calls into the various pallets included in your blockchain.
 
-The Executive module exposes the `execute_block` function that:
+The Executive pallet exposes the `execute_block` function that:
 
 * [Initializes the block](#initializing-a-block).
 
@@ -20,11 +20,11 @@ Before block execution begins, signed transaction are checked for validity. This
 
 ## Executing a Block
 
-Once there is a queue of valid transactions, the Executive module begins to execute the block.
+Once there is a queue of valid transactions, the Executive pallet begins to execute the block.
 
 ### Initializing a Block
 
-To initialize a block, the System module and all other included runtime modules have their `on_initialize` function called which executes any business logic defined by those modules to take place before transactions are executed. The modules are executed in the order which they are defined in the `construct_runtime!` macro, but with the System module always executing first.
+To initialize a block, the System pallet and all other included pallets have their `on_initialize` function called which executes any business logic defined by those pallets to take place before transactions are executed. The pallets are executed in the order which they are defined in the `construct_runtime!` macro, but with the System pallet always executing first.
 
 Then, initial checks take place where the parent hash in the block header is verified to be correct and the extrinsics trie root actually represents the extrinsics.
 
@@ -34,7 +34,7 @@ After the block has been initialized, each valid extrinsic is executed in order 
 
 ### Finalizing a Block
 
-After all queued extrinsics have been executed, the Executive module calls into each module's `on_finalize` function to perform any final business logic which should take place at the end of the block. The modules are again executed in the order which they are defined in the `construct_runtime!` macro, but in this case, the System module finalizes last.
+After all queued extrinsics have been executed, the Executive pallet calls into each pallet's `on_finalize` function to perform any final business logic which should take place at the end of the block. The pallets are again executed in the order which they are defined in the `construct_runtime!` macro, but in this case, the System pallet finalizes last.
 
 Then, final checks take place where the digest and storage root in the block header match what was calculated.
 
@@ -42,9 +42,9 @@ Then, final checks take place where the digest and storage root in the block hea
 
 ### Learn More
 
-* Look at the documentation for [Declaring a Module](development/module/declaration.md) to see how you can define `on_initialize` and `on_finalize` logic for your runtime module.
+* Look at the documentation for [Declaring a Pallet](development/module/declaration.md) to see how you can define `on_initialize` and `on_finalize` logic for your pallet.
 
-* Learn how how you can simulate the orchestration of the Executive module in your [runtime tests](development/module/tests.md).
+* Learn how how you can simulate the orchestration of the Executive pallet in your [runtime tests](development/module/tests.md).
 
 ### Examples
 
